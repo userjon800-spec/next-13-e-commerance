@@ -22,14 +22,14 @@ function Navbar() {
           <Link href={"/"} className="mr-5 hover:text-gray-900">
             Home page
           </Link>
-          <Link href={"/"} className="mr-5 hover:text-gray-900 ">
+          <Link href={"/products"} className="mr-5 hover:text-gray-900 ">
             All products
           </Link>
-          <Link href={"/"} className="mr-5 hover:text-gray-900 ">
+          <Link href={"/contacts"} className="mr-5 hover:text-gray-900 ">
             Contacts
           </Link>
         </nav>
-        <Link href={"/"}>
+        <Link href={"/shopping"}>
           <button className="button  text-black border-transparent hover:border-blue-600 hover:bg-transparent hover:text-black">
             My bag
           </button>

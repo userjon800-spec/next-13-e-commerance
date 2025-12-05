@@ -3,19 +3,51 @@
 import CustomImage from "@/components/image";
 import { ProductType } from "@/interface";
 import { Dialog } from "@headlessui/react";
-import { StarIcon as StarIconOutline } from "@heroicons/react/24/outline";
-import { StarIcon } from "@heroicons/react/24/solid";
+// import { StarIcon as StarIconOutline } from "@heroicons/react/24/outline";
+// import { StarIcon } from "@heroicons/react/24/solid";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import ReactStars from "react-stars";
 const ProductDetailedPage = () => {
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState<ProductType>();
   const [isOpen, setIsOpen] = useState(true);
-
   const { id } = useParams();
   const router = useRouter();
-
+  const handleClick = () => {
+    let products: ProductType[] = JSON.parse(
+      localStorage.getItem("cart") || "[]"
+    );
+    let existProduct = products.find((pro) => pro.id === product?.id);
+    if (existProduct) {
+      let updatedDate = products.map((pro) => {
+        if (pro.id === product?.id) {
+          return {
+            ...pro,
+            quantity: (pro.quantity || 1) + 1,
+          };
+        }
+        return pro;
+      });
+      localStorage.setItem("cart", JSON.stringify(updatedDate));
+      toast.success("Changes saved", {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+        iconTheme: {
+          primary: "#713200",
+          secondary: "#FFFAEE",
+        },
+      });
+    } else {
+      let data = [...products, { ...product, quantity: 1 }];
+      localStorage.setItem("cart", JSON.stringify(data));
+      toast.success("Product added to cart");
+    }
+  };
   useEffect(() => {
     async function getData() {
       setLoading(true);
@@ -24,7 +56,6 @@ const ProductDetailedPage = () => {
       setProduct(product);
       setLoading(false);
     }
-
     getData();
   }, [id]);
 
@@ -97,7 +128,10 @@ const ProductDetailedPage = () => {
                     </p>
                   </div>
                   <div className="space-y-3 text-sm">
-                    <button className="button w-full bg-blue-600 text-white border-transparent hover:border-blue-600 hover:bg-transparent hover:text-black">
+                    <button
+                      className="button w-full bg-blue-600 text-white border-transparent hover:border-blue-600 hover:bg-transparent hover:text-black"
+                      onClick={handleClick}
+                    >
                       Add to bag
                     </button>
                     <button
